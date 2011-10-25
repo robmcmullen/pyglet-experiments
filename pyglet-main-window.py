@@ -5,12 +5,13 @@
 import pyglet
 
 class MainWindow(pyglet.window.Window):
-    def __init__(self, width=1280, height=720):
+    def __init__(self, menu, width=1280, height=720):
         super(MainWindow, self).__init__(width, height)
         self.cursor = 0
         self.font_name = "Droid Sans"
         self.font_size = 20
         self.selected_font_size = 25
+        self.menu = menu
         
         self.load_fonts()
         self.compute_params()
@@ -45,7 +46,7 @@ class MainWindow(pyglet.window.Window):
     
     def draw_menu(self):
         color = (0, 255, 0, 255)
-        text = self.get_label(self.cursor)
+        text = self.menu.get_label(self.cursor)
         # Render center item in larger font
         label = pyglet.text.Label(text,
                                   font_name=self.font_name,
@@ -58,7 +59,7 @@ class MainWindow(pyglet.window.Window):
         i = self.cursor - 1
         limit = max(0, self.cursor - self.items_in_half)
         while i >= limit:
-            text = self.get_label(i)
+            text = self.menu.get_label(i)
             label = pyglet.text.Label(text,
                               font_name=self.font_name,
                               font_size=self.font_size,
@@ -70,9 +71,9 @@ class MainWindow(pyglet.window.Window):
             
         y = self.center - self.selected_font_size
         i = self.cursor + 1
-        limit = min(self.num_labels() - 1, self.cursor + self.items_in_half)
+        limit = min(self.menu.num_labels() - 1, self.cursor + self.items_in_half)
         while i <= limit:
-            text = self.get_label(i)
+            text = self.menu.get_label(i)
             label = pyglet.text.Label(text,
                               font_name=self.font_name,
                               font_size=self.font_size,
@@ -94,10 +95,14 @@ class MainWindow(pyglet.window.Window):
             self.cursor += self.items_in_half
         if self.cursor < 0:
             self.cursor = 0
-        elif self.cursor >= self.num_labels():
-            self.cursor = self.num_labels() - 1
+        elif self.cursor >= self.menu.num_labels():
+            self.cursor = self.menu.num_labels() - 1
             
         self.flip()
+
+class Menu(object):
+    def __init__(self):
+        pass
     
     def get_label(self, index):
         return "Entry #%d" % index
@@ -105,5 +110,6 @@ class MainWindow(pyglet.window.Window):
     def num_labels(self):
         return 50
 
-window = MainWindow()
+menu = Menu()
+window = MainWindow(menu)
 pyglet.app.run()
