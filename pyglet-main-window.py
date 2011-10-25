@@ -44,7 +44,7 @@ class MenuRenderer(object):
     def draw(self, menu):
         self.draw_title(menu)
         self.draw_menu(menu)
-        #self.draw_detail()
+        self.draw_detail(menu)
     
     def draw_title(self, menu):
         title = "Main Window Title"
@@ -94,13 +94,31 @@ class MenuRenderer(object):
             y -= self.font_size
             i += 1
     
+    def draw_detail(self, menu):
+        image = menu.get_detail_image(menu.cursor)
+        image.blit(self.menu_width, self.height - self.title_height - image.height, 0)
+        text = menu.get_details(menu.cursor)
+        label = pyglet.text.Label(text,
+                                  font_name=self.font_name,
+                                  font_size=self.font_size,
+                                  x=self.menu_width + image.width + 10, y=self.height - self.title_height,
+                                  anchor_x='left', anchor_y='top')
+        label.draw()
+        
 
 class Menu(object):
     def __init__(self):
         self.cursor = 0
+        self.default_image = pyglet.image.load("artwork-not-available.png")
     
     def get_label(self, index):
         return "Entry #%d" % index
+    
+    def get_detail_image(self, index):
+        return self.default_image
+    
+    def get_details(self, index):
+        return "Details for entry #%d" % index
     
     def num_labels(self):
         return 50
