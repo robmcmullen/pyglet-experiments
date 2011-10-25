@@ -8,12 +8,12 @@ class MainWindow(pyglet.window.Window):
     def __init__(self, menu, width=1280, height=720):
         super(MainWindow, self).__init__(width, height)
         self.menu = menu
-        self.renderer = MenuRenderer(self, menu)
+        self.renderer = MenuRenderer(self)
     
     def on_draw(self):
         print "draw"
         self.clear()
-        self.renderer.draw()
+        self.renderer.draw(self.menu)
     
     def on_text_motion(self, motion):
         print "here"
@@ -22,9 +22,8 @@ class MainWindow(pyglet.window.Window):
 
 
 class MenuRenderer(object):
-    def __init__(self, window, menu):
+    def __init__(self, window):
         self.window = window
-        self.menu = menu
         self.load_fonts()
         self.compute_params()
     
@@ -42,12 +41,12 @@ class MenuRenderer(object):
         self.center = (self.height - self.title_height)/2
         self.items_in_half = (self.center - self.selected_font_size) / self.font_size
     
-    def draw(self):
-        self.draw_title()
-        self.draw_menu()
+    def draw(self, menu):
+        self.draw_title(menu)
+        self.draw_menu(menu)
         #self.draw_detail()
     
-    def draw_title(self):
+    def draw_title(self, menu):
         title = "Main Window Title"
         label = pyglet.text.Label(title,
                                   font_name=self.font_name,
@@ -56,9 +55,9 @@ class MenuRenderer(object):
                                   anchor_x='center', anchor_y='bottom')
         label.draw()
         
-    def draw_menu(self):
+    def draw_menu(self, menu):
         color = (0, 255, 0, 255)
-        text = self.menu.get_label(self.menu.cursor)
+        text = menu.get_label(menu.cursor)
         # Render center item in larger font
         label = pyglet.text.Label(text,
                                   font_name=self.font_name,
@@ -68,10 +67,10 @@ class MenuRenderer(object):
         label.draw()
         
         y = self.center + self.selected_font_size
-        i = self.menu.cursor - 1
-        limit = max(0, self.menu.cursor - self.items_in_half)
+        i = menu.cursor - 1
+        limit = max(0, menu.cursor - self.items_in_half)
         while i >= limit:
-            text = self.menu.get_label(i)
+            text = menu.get_label(i)
             label = pyglet.text.Label(text,
                               font_name=self.font_name,
                               font_size=self.font_size,
@@ -82,10 +81,10 @@ class MenuRenderer(object):
             i -= 1
             
         y = self.center - self.selected_font_size
-        i = self.menu.cursor + 1
-        limit = min(self.menu.num_labels() - 1, self.menu.cursor + self.items_in_half)
+        i = menu.cursor + 1
+        limit = min(menu.num_labels() - 1, menu.cursor + self.items_in_half)
         while i <= limit:
-            text = self.menu.get_label(i)
+            text = menu.get_label(i)
             label = pyglet.text.Label(text,
                               font_name=self.font_name,
                               font_size=self.font_size,
