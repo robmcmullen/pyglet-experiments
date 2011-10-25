@@ -10,7 +10,7 @@ class MainWindow(pyglet.window.Window):
         self.cursor = 0
         self.font_name = "Droid Sans"
         self.font_size = 20
-        self.selected_font_size = 28
+        self.selected_font_size = 25
         
         self.load_fonts()
         self.compute_params()
@@ -44,12 +44,13 @@ class MainWindow(pyglet.window.Window):
         label.draw()
     
     def draw_menu(self):
-        # Render center item in larger font
+        color = (0, 255, 0, 255)
         text = self.get_label(self.cursor)
+        # Render center item in larger font
         label = pyglet.text.Label(text,
                                   font_name=self.font_name,
                                   font_size=self.selected_font_size,
-                                  x=30, y=self.center,
+                                  color=color, x=30, y=self.center,
                                   anchor_x='left', anchor_y='center')
         label.draw()
         
@@ -61,7 +62,7 @@ class MainWindow(pyglet.window.Window):
             label = pyglet.text.Label(text,
                               font_name=self.font_name,
                               font_size=self.font_size,
-                              x=30, y=y,
+                              color=color, x=30, y=y,
                               anchor_x='left', anchor_y='center')
             label.draw()
             y += self.font_size
@@ -75,7 +76,7 @@ class MainWindow(pyglet.window.Window):
             label = pyglet.text.Label(text,
                               font_name=self.font_name,
                               font_size=self.font_size,
-                              x=30, y=y,
+                              color=color, x=30, y=y,
                               anchor_x='left', anchor_y='center')
             label.draw()
             y -= self.font_size
